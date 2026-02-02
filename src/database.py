@@ -1,11 +1,11 @@
-import sqlite3 
-from .modelos import: Tarea, Proyecto
-import os 
+import sqlite3
+from .modelos import Tarea, Proyecto
+import os
 
-DATABASE_NAME= 'tareas.db'
+DATABASE_NAME = 'tareas.db'
 
 
-def get_connection(): 
+def get_connection():
     conn = sqlite3.connect(DATABASE_NAME)
     conn.row_factory = sqlite3.Row
     return conn
@@ -42,7 +42,8 @@ def crear_tablas():
 
     try:
         cursor.execute(
-            "INSERT INTO proyectos (id, nombre, descripcion, estado) VALUES (0, 'Tareas Generales', 'Tareas sin clasificar', 'Activo')")
+            "INSERT INTO proyectos (id, nombre, descripcion, estado) VALUES (0, 'Tareas Generales', 'Tareas sin clasificar', 'Activo')"
+        )
     except sqlite3.IntegrityError:
         pass
 
@@ -50,8 +51,9 @@ def crear_tablas():
     conn.close()
 
 
-class DBManager:
 
+    
+class DBManager:
     def __init__(self):
         crear_tablas()
 
@@ -68,10 +70,9 @@ class DBManager:
         conn.commit()
         conn.close()
         return tarea
-    
 
     def obtener_proyectos(self):
-        conn = get_connection
+        conn = get_connection()
         cursor = conn.cursor()
 
         cursor.execute("SELECT * FROM proyectos")
@@ -79,18 +80,16 @@ class DBManager:
         conn.close()
 
         proyectos = [
-            Proyecto(nombre=fila['nombre'], descripcion=fila['descripcion'],
-                     id=fila['id'], estado=fila['estado'])
+            Proyecto(nombre=fila["nombre"], descripcion=fila["descripcion"], id=fila["id"], estado=fila["estado"])
             for fila in filas
         ]
         return proyectos
-    
 
     def obtener_tareas(self, estado=None):
         conn = get_connection()
         cursor = conn.cursor()
 
-        sql = "SELECT FROM * tareas"
+        sql = "SELECT * FROM tareas"
         params = []
 
         if estado:
@@ -105,6 +104,7 @@ class DBManager:
 
 
         tareas = []
+
         for fila in filas:
             t = Tarea(
                 titulo=fila['titulo'], 
@@ -117,28 +117,41 @@ class DBManager:
             )
             tareas.append(t)
 
-        return tareas
-    
+        return tareas       
 
-    if __name__ == '__main__':
+    def actualizar_tarea_estado(self, tarea_id: int, nuevo_estado: str):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE tareas SET estado = ? WHERE id = ?", (nuevo_estado, tarea_id))
+        conn.commit()
+        conn.close()
+
+    def eliminar_tarea(self, tarea_id: int):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM tareas WHERE id = ?", (tarea_id,))
+        conn.commit()
+        conn.close()
+
+if __name__ == '__main__':
     # Bloque de prueba para la clase
-       if os.path.exists(DATABASE_NAME):
+    if os.path.exists(DATABASE_NAME):
         os.remove(DATABASE_NAME)
         print(f"Base de datos {DATABASE_NAME} eliminada.")
 
-        crear_tablas()
-        print(
+    crear_tablas()
+    print(
         f"Base de datos {DATABASE_NAME} y tablas inicializadas correctamente.")
 
-        # Prueba del CRUD (CREATE)
-        manager = DBManager()
-        tarea_prueba = Tarea(
-            titulo="Completar Ejercicio de CRUD",
-            fecha_limite="2025-10-30",
-            prioridad="Alta",
-            proyecto_id=0,
-            descripcion="Implementar el módulo database.py"
-        )
+    # Prueba del CRUD (CREATE)
+    manager = DBManager()
+    tarea_prueba = Tarea(
+        titulo="Completar Ejercicio de CRUD",
+        fecha_limite="2025-10-30",
+        prioridad="Alta",
+        proyecto_id=0,
+        descripcion="Implementar el módulo database.py"
+    )
 
-        tarea_creada = manager.crear_tarea(tarea_prueba)
-        print(f"Tarea creada y ID asignado: {tarea_creada.id}")
+    tarea_creada = manager.crear_tarea(tarea_prueba)
+    print(f"Tarea creada y ID asignado: {tarea_creada.id}")

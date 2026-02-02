@@ -1,38 +1,54 @@
-/* static/style.css */
+/* static/stile.css */
 
+/* General styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
     margin: 0;
     padding: 20px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
     max-width: 900px;
     margin: 0 auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
     color: #007bff;
     text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    font-weight: 600;
 }
 
+/* Task list */
 .task-list {
     list-style: none;
     padding: 0;
 }
 
 .task-item {
-    padding: 15px;
-    border-bottom: 1px solid #eee;
+    padding: 20px;
+    border-bottom: 1px solid #dee2e6;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: background-color 0.3s;
+}
+
+.task-item:last-child {
+    border-bottom: none;
+}
+
+.task-item:hover {
+    background-color: #f1f3f5;
 }
 
 .task-info {
@@ -40,41 +56,67 @@ h1 {
 }
 
 .task-title {
-    font-weight: bold;
-    margin-bottom: 5px;
-    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 1.2em;
 }
 
+/* Priority levels */
 .priority-high {
-    color: #dc3545; /* Rojo */
+    color: #e74c3c; /* Red */
 }
 
 .priority-medium {
-    color: #ffc107; /* Amarillo */
+    color: #f39c12; /* Orange */
 }
 
 .priority-low {
-    color: #28a745; /* Verde */
+    color: #2ecc71; /* Green */
 }
 
+/* Action buttons */
 .action-button {
-    background-color: #28a745;
+    background-color: #007bff;
     color: white;
     border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
+    padding: 10px 15px;
+    border-radius: 6px;
     text-decoration: none;
     cursor: pointer;
     font-size: 0.9em;
+    transition: background-color 0.3s;
 }
 
+.action-button:hover {
+    background-color: #0056b3;
+}
+
+.delete-button {
+    background-color: #e74c3c;
+}
+
+.delete-button:hover {
+    background-color: #c0392b;
+}
+
+/* Add link */
 .add-link {
-    display: block;
-    margin: 20px 0;
-    text-align: center;
-    background-color: #007bff;
+    display: inline-block;
+    margin-top: 30px;
+    background-color: #28a745;
     color: white;
-    padding: 10px;
-    border-radius: 4px;
+    padding: 12px 20px;
+    border-radius: 6px;
     text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.add-link:hover {
+    background-color: #218838;
+}
+
+/* Center add link */
+.text-center {
+    text-align: center;
 }

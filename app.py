@@ -1,8 +1,7 @@
-print ("¡Hola, mundo!")
-
 from flask import Flask, render_template, request, redirect, url_for
 from src.database import DBManager
-from src.modelos import Tarea, Proyectos 
+from src.modelos import Tarea, Proyecto
+
 
 
 app = Flask(__name__)
@@ -12,7 +11,7 @@ db_manager = DBManager()
 @app.route('/')
 def index():
     
-    tareas_pendientes = db_manager.obtener_tareas(estado='pendiente')
+    tareas_pendientes = db_manager.obtener_tareas(estado="Pendiente")
 
     proyectos = db_manager.obtener_proyectos()
 
@@ -23,32 +22,44 @@ def crear_tarea_web():
 
     proyectos = db_manager.obtener_proyectos()
 
-    if request.method = 'POST':
-        titulo = request.form.get['titulo']
-        descripcion = request.form.get['descripcion']
-        limite = request.form.get['fecha_limite']
-        prioridad = request.form.get['prioridad']
-        proyecto_id = int(request.form.get['proyecto_id'])
+    if request.method == 'POST':
+        titulo = request.form.get('titulo')
+        descripcion = request.form.get('descripcion')
+        limite = request.form.get('fecha_limite')
+        prioridad = request.form.get('prioridad')
+        proyecto_id = int(request.form.get('proyecto_id'))
 
         nueva_tarea = Tarea(
-            titulo=titulo
-            descripcion=descripcion
-            fecha_limite=limite
-            prioridad=prioridad
+            titulo=titulo,
+            descripcion=descripcion,
+            fecha_limite=limite,
+            prioridad=prioridad,
             proyecto_id=proyecto_id
         )
 
-
         db_manager.crear_tarea(nueva_tarea)
         return redirect(url_for('index'))
-    
+
     return render_template('formulario_tarea.html', proyectos=proyectos)
 
 
+@app.route('/completar/<int:tarea_id>')
+def completar_tarea(tarea_id):
+    """
+    Ruta que maneja la actualización del estado de la tarea a 'Completada'.
+    """
+    db_manager.actualizar_tarea_estado(tarea_id, "Completada")
+    return redirect(url_for('index'))
+
+@app.route('/eliminar/<int:tarea_id>')
+def eliminar_tarea(tarea_id):
+    """
+    Ruta que maneja la eliminación de una tarea.
+    """
+    db_manager.eliminar_tarea(tarea_id)
+    return redirect(url_for('index'))
+
+
 if __name__ == '__main__':
-    db_manager.crear_tabla()
+    print("Iniciando servidor Flask...")
     app.run(debug=True)
-
-        
-
-
